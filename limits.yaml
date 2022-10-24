@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: limits
+  labels:
+    app: limits
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: limits
+  template:
+    metadata:
+      labels:
+        app: limits
+    spec:
+      containers:
+      - image: gcr.io/kuar-demo/kuard-amd64:blue
+        name: limits
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 16Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: limits
+  name: limits
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: limits
